@@ -1,0 +1,32 @@
+name: PDF Filler CI/CD
+
+on:
+  push:
+    branches: [main]
+jobs:
+  deploy_to_droplet:
+    runs-on: self-hosted
+    env:
+      DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+
+    steps:
+
+      - name: Checkout Code
+        uses: actions/checkout@v3
+        with:
+          ref: main
+
+      - name: Use Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18.0.0
+      # - name: Cleanup Docker data every 10th build
+      #   run: | 
+      #     echo $DOCKER_PASSWORD | sudo -S chmod +x cleanup_docker.sh
+      #     echo $DOCKER_PASSWORD | sudo -S ./cleanup_docker.sh
+      #   shell: bash 
+      - name: Shutdown existing containers gracefully
+        run: echo $DOCKER_PASSWORD | sudo -S docker-compose down
+
+      - name: Run Docker Compose
+        run: echo $DOCKER_PASSWORD | sudo -S docker-compose up --build -d
