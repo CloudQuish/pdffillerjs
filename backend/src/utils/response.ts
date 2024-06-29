@@ -1,5 +1,13 @@
 import { Response } from "express";
-import { z } from "zod";
+import { ZodError } from "zod";
+
+interface ApiResponse {
+  status: "ok" | "error";
+  message?: string | null;
+  data?: any;
+  path?: string;
+}
+
 export const sendSuccess = ({
   res,
   status = 200,
@@ -13,69 +21,50 @@ export const sendSuccess = ({
 }) => {
   res.status(status).json({
     status: "ok",
-    message: message ? message : null,
+    message: message || null,
     data,
   });
 };
 
 export const sendError = ({
   res,
-  status,
+  status = 500,
+  message = "Internal Server Error",
   data = null,
-  message,
+  path = "",
 }: {
   res: Response;
-  status: number;
-  data?: any;
+  status?: number;
   message: string;
+  data?: any;
+  path?: string;
 }) => {
   res.status(status).json({
     status: "error",
     message,
     data,
+    path,
   });
 };
 
 export const errorHandler = (res: Response, err: any) => {
-  if (err instanceof z.ZodError) {
-    // Map each error to a string describing the issue
-    const errorMessages = err.errors.map((err) => {
-      // You can further customize this message format as needed
-      return `${err.path.join(".")}: ${err.message}`;
-    });
-
-    // Join all error messages into a single string separated by semicolons or any other separator you prefer
-    const formattedErrorMessage = errorMessages.join("; ");
-
-    return res.status(400).json({
-      status: "error",
-      message: formattedErrorMessage,
-      data: null,
-    });
+  if (err instanceof ZodError) {
+    // Handle Zod validation errors
+    const errorMessages = err.errors.map(
+      (error) => `${error.path.join(".")} : ${error.message}`
+    );
+    return sendError({ res, status: 400, message: errorMessages.join("; ") });
   }
 
   if (err.errors && err.errors.length > 0) {
-    return res.status(400).json({
-      status: "error",
-      message: err.message,
-      data: null,
-      path: err.path,
-    });
+    // Handle other types of structured errors with messages and paths
+    return sendError({ res, status: 400, message: err.message });
   }
 
-  if (err.message) {
-    return res.status(400).json({
-      status: "error",
-      message: err.message,
-      data: null,
-      path: err.path,
-    });
-  }
-
-  return res.status(500).json({
-    status: "error",
-    message: "Internal Server Error",
-    data: null,
-    path: "",
+  // Fallback to generic error handling
+  return sendError({
+    res,
+    status: 500,
+    message: err.message || "Internal Server Error",
   });
 };

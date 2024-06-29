@@ -5,23 +5,21 @@ import { Router } from "express";
 
 const PDFRouter = Router();
 const dynamicUploader = new DynamicUploadMiddleware({ type: "single" });
+const pdfController = new PDFController();
 
 PDFRouter.post(
   "/fill",
   verifyFieldNames,
   dynamicUploader.middleware,
-  PDFController.fill_pdf
+  pdfController.fillPdf
 );
 
-PDFRouter.post("/fill-by-url", PDFController.fill_pdf_by_url);
-PDFRouter.post("/fill-pdf-by-name", PDFController.fill_pdf_by_name);
-PDFRouter.post(
-  "/get-fillable-fields-by-url",
-  PDFController.get_fillable_fields
-);
+PDFRouter.post("/fill-by-url", pdfController.fillPdfByUrl);
+PDFRouter.post("/fill-pdf-by-name", pdfController.fillPdfByName);
+PDFRouter.post("/get-fillable-fields-by-url", pdfController.getFillableFields);
 PDFRouter.post(
   "/get-fillable-fields-by-buffer",
-  PDFController.get_fillable_fields_by_buffer
+  pdfController.getFillableFieldsByBuffer
 );
 
 export default PDFRouter;
