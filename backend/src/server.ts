@@ -5,6 +5,7 @@ import { DataSource } from "typeorm";
 import { middlewaresConfig } from "@middlewares/index";
 import baseRouter from "@routes";
 import { DatabaseConnector } from "./components/database";
+import swaggerUi from "swagger-ui-express";
 
 export interface AppContext {
   app: App;
@@ -35,6 +36,7 @@ export class App {
     try {
       await this.attachMiddlewares();
       await this.dbConnector.connect();
+      this.setupSwagger();
       this.setupRoutes();
       this.setupSignalHandlers();
       this.startServer();
@@ -50,6 +52,18 @@ export class App {
 
   private setupRoutes() {
     this.express.use("/api", baseRouter());
+  }
+
+  private setupSwagger() {
+    const swaggerDocument = require("../swagger.json");
+    const options = {
+      customSiteTitle: "PDF Filler API",
+    };
+    this.express.use(
+      "/api-docs",
+      swaggerUi.serve,
+      swaggerUi.setup(swaggerDocument, options)
+    );
   }
 
   private setupSignalHandlers() {
