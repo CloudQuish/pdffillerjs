@@ -18,7 +18,7 @@ class PDFController {
   }
 
   private async initLogger() {
-    this.logger = await getLogger("PDFController");
+    this.logger = await getLogger("API");
   }
 
   async fillPdf(req: Request, res: Response) {

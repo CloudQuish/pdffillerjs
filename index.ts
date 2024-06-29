@@ -7,7 +7,7 @@ import { App } from "./src/server";
 
 const main = async () => {
   try {
-    const logger = await getLogger("api");
+    const logger = await getLogger("API");
     const expressApp = express();
 
     const app = new App({
