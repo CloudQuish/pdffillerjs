@@ -5,7 +5,7 @@ build/
 tmp/
 temp/
 # env/
-# .env
+.env
 ./src/bootstrap/certificate.crt
 certificate.crt
 uploads/
