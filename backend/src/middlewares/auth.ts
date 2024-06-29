@@ -8,43 +8,51 @@ export const protect = async (
   res: Response,
   next: NextFunction
 ) => {
-  const token = await getToken(req);
-  if (!token) {
+  try {
+    const token = await getToken(req);
+
+    if (!token) {
+      return sendError({
+        res,
+        status: 401,
+        data: null,
+        message: "Login is required to access this!",
+      });
+    }
+
+    const decoded: any = jwtDecode(token);
+
+    if (!decoded.id) {
+      return sendError({
+        res,
+        status: 401,
+        data: null,
+        message: "Invalid token: Missing user ID",
+      });
+    }
+
+    const user = await UserEntity.findOne({
+      where: { provider_id: decoded.id },
+    });
+
+    if (!user) {
+      return sendError({
+        res,
+        status: 401,
+        data: null,
+        message: "User not found",
+      });
+    }
+
+    req.user = user;
+    next();
+  } catch (error) {
+    console.error("Error in protect middleware:", error);
     return sendError({
       res,
-      status: 401,
+      status: 500,
       data: null,
-      message: "Login is required to access this!",
+      message: "Internal server error",
     });
   }
-
-  let decoded: any = jwtDecode(token);
-
-  if (!decoded.id) {
-    return sendError({
-      res,
-      status: 401,
-      data: null,
-      message: "Login is required to access this!",
-    });
-  }
-
-  let user = await UserEntity.findOne({
-    where: { provider_id: decoded.id },
-  });
-
-  if (!user) {
-    return sendError({
-      res,
-      status: 401,
-      data: null,
-      message: "Login is required to access this!",
-    });
-  }
-  req.user = user;
-  next();
 };
-
-
-
-
