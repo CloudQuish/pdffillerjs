@@ -24,44 +24,47 @@ Welcome to the PDF Filler API! This API allows you to fill PDF files with specif
 ### Installation
 
 1. Clone the repository:
-   \`\`\`bash
+
+   ```bash
    git clone https://github.com/CloudQuish/pdffille_os.git
-   \`\`\`
+   ```
 
 2. Navigate to the project directory:
-   \`\`\`bash
+
+   ```bash
    cd pdffille_os
-   \`\`\`
+   ```
 
 3. Install the dependencies:
-   \`\`\`bash
+   ```bash
    pnpm install
-   \`\`\`
+   ```
 
 ### Running in Dev Server
 
 1. Build the server:
-   \`\`\`bash
+   ```bash
    pnpm run start:dev
-   \`\`\`
+   ```
 
 ### Running the Build Server
 
 1. Build the server:
-   \`\`\`bash
+
+   ```bash
    pnpm run build
-   \`\`\`
+   ```
 
 2. Run the server:
-   \`\`\`bash
+   ```bash
    pnpm run start
-   \`\`\`
+   ```
 
 The API will be available at `http://localhost:8000/api`.
 
 ## API Documentation
 
-For detailed API documentation, please visit the [API Documentation](http://localhost:8000/api-docs) once the server is running.
+For detailed API documentation, please visit the [API Documentation](http://localhost:8000) once the server is running.
 
 ## Contributing
 
