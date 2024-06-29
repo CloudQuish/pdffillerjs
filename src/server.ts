@@ -1,10 +1,8 @@
-import express, { Express } from "express";
+import { Express } from "express";
 import http, { Server } from "http";
 import { Logger } from "pino";
-import { DataSource } from "typeorm";
 import { middlewaresConfig } from "@middlewares/index";
 import baseRouter from "@routes";
-import { DatabaseConnector } from "./components/database";
 import swaggerUi from "swagger-ui-express";
 
 export interface AppContext {
@@ -14,28 +12,22 @@ export interface AppContext {
 export type AppParams = {
   express: Express;
   logger: Logger;
-  database: DataSource;
 };
 
 export class App {
   private readonly express: Express;
   private readonly server: Server;
   private readonly logger: Logger;
-  private readonly database: DataSource;
-  private readonly dbConnector: DatabaseConnector;
 
   constructor(params: AppParams) {
     this.express = params.express;
     this.server = http.createServer(this.express);
     this.logger = params.logger;
-    this.database = params.database;
-    this.dbConnector = new DatabaseConnector(this.logger);
   }
 
   private async setup() {
     try {
       await this.attachMiddlewares();
-      await this.dbConnector.connect();
       this.setupSwagger();
       this.setupRoutes();
       this.setupSignalHandlers();
@@ -95,9 +87,6 @@ export class App {
           }
         });
       });
-
-      // Close database connection
-      await this.database.destroy();
 
       this.logger.info("Server has shut down gracefully");
       process.exit(2);
