@@ -4,17 +4,14 @@ import "reflect-metadata";
 import express from "express";
 import { getLogger } from "./src/components/logger";
 import { App } from "./src/server";
-import { AppDataSource } from "./src/bootstrap/data-source";
 
 const main = async () => {
   try {
     const logger = await getLogger("api");
     const expressApp = express();
-    const database = AppDataSource;
 
     const app = new App({
       express: expressApp,
-      database,
       logger,
     });
 
