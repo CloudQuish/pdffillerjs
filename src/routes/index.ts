@@ -1,9 +1,11 @@
 import { Router } from "express";
 import PDFRouter from "./pdf.router";
+
 const baseRouter = () => {
   const router = Router();
 
   router.use("/pdf", PDFRouter);
+
   router.use("*", (req, res) => {
     res.status(404).json({
       status: "error",

@@ -18,7 +18,6 @@ class PDFController {
 
   constructor() {
     this.initLogger();
-    console.log("PDFController constructor");
   }
 
   private async initLogger() {
