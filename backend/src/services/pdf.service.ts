@@ -1,6 +1,5 @@
 import axios from "axios";
-import { PDFDocument, PDFField, PDFForm, PDFPage } from "pdf-lib";
-import { z } from "zod";
+import { PDFDocument, PDFForm } from "pdf-lib";
 
 interface FillingValue {
   accessor: string;

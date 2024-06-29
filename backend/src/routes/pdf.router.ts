@@ -1,14 +1,15 @@
 import { PDFController } from "@controllers/index";
-import dynamicUpload from "@middlewares/dynamicUpload";
-import { verify_filed_names_and_provied_entry } from "@middlewares/verify_field_name";
+import { DynamicUploadMiddleware } from "@middlewares/upload.middleware";
+import { verifyFieldNames } from "@middlewares/fieldverifier.middleware";
 import { Router } from "express";
 
 const PDFRouter = Router();
+const dynamicUploader = new DynamicUploadMiddleware({ type: "single" });
 
 PDFRouter.post(
   "/fill",
-  verify_filed_names_and_provied_entry,
-  dynamicUpload,
+  verifyFieldNames,
+  dynamicUploader.middleware,
   PDFController.fill_pdf
 );
 

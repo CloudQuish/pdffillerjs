@@ -3,15 +3,22 @@ import multer, { FileFilterCallback } from "multer";
 import { file_type_allowed } from "@config";
 import { sendError } from "@utils";
 
-const dynamicUpload = ({
-  field = "files",
-  type = "any",
-}: {
+interface DynamicUploadOptions {
   field?: string;
   type?: "single" | "array" | "any";
-}) => {
-  return (req: Request, res: Response, next: NextFunction) => {
-    if (!file_type_allowed.includes(field)) {
+}
+
+export class DynamicUploadMiddleware {
+  private field: string;
+  private type: "single" | "array" | "any";
+
+  constructor(options: DynamicUploadOptions = {}) {
+    this.field = options.field || "files";
+    this.type = options.type || "any";
+  }
+
+  middleware = (req: Request, res: Response, next: NextFunction) => {
+    if (!file_type_allowed.includes(this.field)) {
       return sendError({
         res,
         message: "Invalid field name for file from the client.",
@@ -23,40 +30,31 @@ const dynamicUpload = ({
 
     const multerConfig = {
       storage: multer.diskStorage({}),
-      fileFilter: (
-        req: Request,
-        file: Express.Multer.File,
-        cb: FileFilterCallback
-      ) => {
-        const ext = file.mimetype.split("/")[1];
-        if (!["pdf"].includes(ext)) {
-          return cb(new Error("Only pdf files are allowed."));
-        }
-        cb(null, true);
-      },
+      fileFilter: this.fileFilter,
       limits: {
         fileSize: parseFloat(process.env.MAX_FILE_SIZE) || 10 * 1024 * 1024,
       },
     };
-    switch (type) {
+
+    switch (this.type) {
       case "single":
-        upload = multer(multerConfig).single(field);
+        upload = multer(multerConfig).single(this.field);
         break;
       case "array":
-        upload = multer(multerConfig).array(field, 5);
+        upload = multer(multerConfig).array(this.field, 5);
         break;
       default:
         upload = multer(multerConfig).any();
         break;
     }
 
-    upload(req, res, function (err) {
+    upload(req, res, (err: any) => {
       if (err instanceof multer.MulterError) {
         return sendError({
           res,
           message:
             err.code === "LIMIT_UNEXPECTED_FILE"
-              ? `Filed name ${field} expected`
+              ? `Field name ${this.field} expected`
               : err.message,
           status: 400,
         });
@@ -70,9 +68,9 @@ const dynamicUpload = ({
 
       // Check if files are uploaded
       if (
-        (type === "single" &&
+        (this.type === "single" &&
           (!req.file || Object.keys(req.file).length === 0)) ||
-        (type !== "single" &&
+        (this.type !== "single" &&
           (!req.files || Object.keys(req.files).length === 0))
       ) {
         return sendError({
@@ -85,6 +83,16 @@ const dynamicUpload = ({
       next();
     });
   };
-};
 
-export default dynamicUpload;
+  private fileFilter(
+    req: Request,
+    file: Express.Multer.File,
+    cb: FileFilterCallback
+  ) {
+    const ext = file.mimetype.split("/")[1];
+    if (!["pdf"].includes(ext)) {
+      return cb(new Error("Only pdf files are allowed."));
+    }
+    cb(null, true);
+  }
+}

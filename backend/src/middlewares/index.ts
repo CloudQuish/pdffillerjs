@@ -1,7 +1,6 @@
 import express, { Express } from "express";
 import cors from "cors";
 import cookieParser from "cookie-parser";
-// import dynamic_cors from "./dynamic_cors";
 
 export const middlewaresConfig = (app: Express) => {
   app.set("trust proxy", 1);
