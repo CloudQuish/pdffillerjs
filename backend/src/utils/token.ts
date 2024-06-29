@@ -1,7 +1,6 @@
 import { Request, Response } from "express";
 import jwt from "jsonwebtoken";
 import cookie from "cookie";
-import crypto from "crypto";
 
 export const generateToken = (id: string) => {
   return jwt.sign({ id }, process.env.JWT_SECRET, {
