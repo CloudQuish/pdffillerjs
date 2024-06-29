@@ -1,18 +1,36 @@
-import * as dotenv from "dotenv";
-dotenv.config();
+require("dotenv").config();
 
-import getApp from "./src/server";
+import "reflect-metadata";
+import express from "express";
+import { getLogger } from "./src/components/logger";
+import { App } from "./src/server";
+import { AppDataSource } from "./src/bootstrap/data-source";
 
-const port = process.env.PORT || 8001;
+const main = async () => {
+  try {
+    const logger = await getLogger("api");
+    const expressApp = express();
+    const database = AppDataSource;
 
-async function startApp() {
-  const app = await getApp();
+    const app = new App({
+      express: expressApp,
+      database,
+      logger,
+    });
 
-  app.listen(port, () => {
-    console.log(
-      `API SERVER RUNNING ON PORT: ${port} and worker id at ${process.pid}`
-    );
-  });
-}
+    await app.start();
 
-startApp();
+    process.on("SIGINT", async () => {
+      await app.shutdown();
+    });
+
+    process.on("SIGTERM", async () => {
+      await app.shutdown();
+    });
+  } catch (error) {
+    console.error("Failed to start the application:", error);
+    process.exit(1);
+  }
+};
+
+main();
