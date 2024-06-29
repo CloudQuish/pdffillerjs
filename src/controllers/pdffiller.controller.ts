@@ -6,9 +6,23 @@ import path from "path";
 import { PDFService } from "@services";
 import { sendError, sendSuccess } from "@utils";
 import { ApiJSONInputSchema } from "@config";
+import { getLogger } from "../components/logger";
+import { Logger } from "pino";
 
 class PDFController {
+  private logger: Logger;
+
+  constructor() {
+    this.initLogger();
+    console.log("PDFController constructor");
+  }
+
+  private async initLogger() {
+    this.logger = await getLogger("PDFController");
+  }
+
   async fillPdf(req: Request, res: Response) {
+    this.logger.info("fillPdf");
     return sendSuccess({
       res,
       status: 200,

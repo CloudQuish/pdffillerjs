@@ -2,7 +2,7 @@ import pino, { Logger } from "pino";
 
 let loggerInstance: Logger;
 
-export const getLogger = async (serviceName: string) => {
+export const getLogger = async (serviceName: string): Promise<Logger> => {
   if (loggerInstance) {
     return loggerInstance;
   }
