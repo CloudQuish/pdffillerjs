@@ -57,7 +57,9 @@ export class App {
     process.on("SIGTERM", () => this.shutdown());
   }
 
-  private startServer() {
+  private async startServer() {
+    // wait for some time before starting the server in order to avoid EADDRINUSE error
+    await new Promise((resolve) => setTimeout(resolve, 1000));
     const port = process.env.PORT || 8000;
     this.server.listen(port, () => {
       this.logger.info(`Server is running on port ${port}`);
@@ -80,10 +82,11 @@ export class App {
         });
       });
 
+      // Close database connection
       await this.database.destroy();
 
       this.logger.info("Server has shut down gracefully");
-      process.exit(0);
+      process.exit(2);
     } catch (error) {
       this.logger.error("Error during shutdown", error);
       process.exit(1);

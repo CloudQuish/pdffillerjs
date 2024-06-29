@@ -19,14 +19,6 @@ const main = async () => {
     });
 
     await app.start();
-
-    process.on("SIGINT", async () => {
-      await app.shutdown();
-    });
-
-    process.on("SIGTERM", async () => {
-      await app.shutdown();
-    });
   } catch (error) {
     console.error("Failed to start the application:", error);
     process.exit(1);
