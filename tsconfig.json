@@ -28,5 +28,6 @@
       "@subscribers": ["./src/subscribers/index.ts"]
     },
     "types": ["express", "node"]
-  }
+  },
+  "exclude": ["node_modules"]
 }
