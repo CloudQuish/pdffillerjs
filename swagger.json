@@ -3,7 +3,7 @@
   "info": {
     "title": "PDF Filler API Documentation",
     "version": "1.0.0",
-    "description": "API for filling and retrieving information from PDF files "
+    "description": "API for filling and retrieving information from PDF files"
   },
   "servers": [
     {
@@ -29,6 +29,20 @@
           "default": "localhost"
         }
       }
+    }
+  ],
+  "components": {
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    }
+  },
+  "security": [
+    {
+      "bearerAuth": []
     }
   ],
   "paths": {
@@ -147,7 +161,12 @@
               }
             }
           }
-        }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
       }
     },
     "/fill-pdf-by-name": {
@@ -264,7 +283,12 @@
               }
             }
           }
-        }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
       }
     },
     "/get-fillable-fields-by-url": {
@@ -321,7 +345,12 @@
               }
             }
           }
-        }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
       }
     },
     "/get-fillable-fields-by-buffer": {
@@ -378,7 +407,12 @@
               }
             }
           }
-        }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
       }
     }
   }
