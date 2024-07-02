@@ -46,7 +46,7 @@
     }
   ],
   "paths": {
-    "/fill-by-url": {
+    "/pdf/fill-by-url": {
       "post": {
         "summary": "Fill a PDF from a provided URL with given data",
         "requestBody": {
@@ -169,7 +169,7 @@
         ]
       }
     },
-    "/fill-pdf-by-name": {
+    "/pdf/fill-pdf-by-name": {
       "post": {
         "summary": "Fill a PDF by its name with provided data",
         "requestBody": {
@@ -291,7 +291,7 @@
         ]
       }
     },
-    "/get-fillable-fields-by-url": {
+    "/pdf/get-fillable-fields-by-url": {
       "post": {
         "summary": "Retrieve fillable fields from a PDF provided by a URL",
         "requestBody": {
@@ -353,7 +353,7 @@
         ]
       }
     },
-    "/get-fillable-fields-by-buffer": {
+    "/pdf/get-fillable-fields-by-buffer": {
       "post": {
         "summary": "Retrieve fillable fields from a PDF provided as a buffer",
         "requestBody": {

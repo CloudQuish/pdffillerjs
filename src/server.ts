@@ -52,7 +52,7 @@ export class App {
       customSiteTitle: "PDF Filler API",
     };
     this.express.use(
-      "/",
+      "/api-docs",
       swaggerUi.serve,
       swaggerUi.setup(swaggerDocument, options)
     );
