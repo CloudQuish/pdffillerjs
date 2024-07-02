@@ -28,9 +28,9 @@ export class App {
   private async setup() {
     try {
       await this.attachMiddlewares();
-   
+
       this.setupSwagger();
-     
+
       this.setupRoutes();
       this.setupSignalHandlers();
       this.startServer();
@@ -54,7 +54,7 @@ export class App {
       customSiteTitle: "PDF Filler API",
     };
     this.express.use(
-      "/",
+      "/api-docs",
       swaggerUi.serve,
       swaggerUi.setup(swaggerDocument, options)
     );
@@ -99,7 +99,6 @@ export class App {
   }
 
   async start() {
-   
     await this.setup();
   }
 }
