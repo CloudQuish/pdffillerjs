@@ -14,18 +14,7 @@ import {
 } from "../validations/pdffiller.validation";
 
 class PDFController {
-  private logger: Logger;
-
-  constructor() {
-    this.initLogger();
-  }
-
-  private async initLogger() {
-    this.logger = await getLogger("API");
-  }
-
   async fillPdf(req: Request, res: Response) {
-    this.logger.info("fillPdf");
     return sendSuccess({
       res,
       status: 200,
@@ -85,9 +74,9 @@ class PDFController {
   }
 
   async getFillableFields(req: Request, res: Response) {
-    console.log("Pringint request body",req.body)
+    console.log("Pringint request body", req.body);
     const { file_url } = req.body;
-console.log("I am here printing request body",req.body)
+    console.log("I am here printing request body", req.body);
     try {
       getFillableFieldsSchema.parse({ file_url });
 
