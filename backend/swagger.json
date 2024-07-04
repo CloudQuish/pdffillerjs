@@ -7,8 +7,8 @@
   },
   "servers": [
     {
-      "url": "http://localhost:8000/api",
-      "description": "Local Server"
+      "url": "https://v3.revesh.com/api",
+      "description": "Hosted Server | Revesh PDF Filler API"
     },
     {
       "url": "{scheme}://{host}{port}{base_path}",

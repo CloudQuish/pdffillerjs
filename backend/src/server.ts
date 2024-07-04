@@ -4,6 +4,7 @@ import { Logger } from "pino";
 import { middlewaresConfig } from "@middlewares/index";
 import baseRouter from "@routes";
 import swaggerUi from "swagger-ui-express";
+import { connectDatabase } from "./bootstrap/database";
 
 export interface AppContext {
   app: App;
@@ -42,6 +43,7 @@ export class App {
 
   private async attachMiddlewares() {
     await middlewaresConfig(this.express);
+    await connectDatabase();
   }
 
   private setupRoutes() {

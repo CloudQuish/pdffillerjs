@@ -1,20 +1,15 @@
 import {
-    Entity,
-    PrimaryGeneratedColumn,
-    Column,
-    BaseEntity,
-    CreateDateColumn,
-    UpdateDateColumn,
-    DeleteDateColumn,
-    BeforeInsert,
-    OneToMany,
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  BeforeInsert
 } from "typeorm";
 
-import crypto from "crypto";
-import bcrypt from "bcryptjs";
 
 import { IUser } from "../interfaces";
-import { FileEntity } from "@entity";
+import { CustomBaseEntity } from "./base.entity";
+import APIKey from "./api.entity";
+import { create_unique_api_key } from "src/utils/apikey";
 
 @Entity({
   name: "user",
@@ -22,7 +17,7 @@ import { FileEntity } from "@entity";
     created_at: "ASC",
   },
 })
-export default class User extends BaseEntity implements IUser {
+export default class User extends CustomBaseEntity implements IUser {
   @PrimaryGeneratedColumn()
   id!: number;
 
@@ -35,39 +30,17 @@ export default class User extends BaseEntity implements IUser {
   @Column({ type: "text" })
   email!: string;
 
-  @Column({ type: "text", select: false })
-  password!: string;
-
-  @Column({
-    type: "text",
-    select: false,
-    enum: ["credentials", "google", "facebook"],
-  })
-  provider!: "credentials" | "google" | "facebook";
-
-  @Column({ type: "text", select: false })
-  provider_id!: string;
-
-  @OneToMany(() => FileEntity, (file) => file.user)
-  file!: FileEntity[];
-
-  // default columns
-  @CreateDateColumn({ select: false })
-  created_at!: Date;
-
-  @UpdateDateColumn({ select: false })
-  updated_at!: Date;
-
-  @DeleteDateColumn({ select: false })
-  deleted_at!: Date;
+ 
 
   @BeforeInsert()
   async beforeInsert() {
-    if (this.provider === "credentials") {
-      this.provider_id = crypto.createHmac("sha256", this.email).digest("hex");
-    }
-
-    const salt = await bcrypt.genSalt(10);
-    this.password = await bcrypt.hash(this.password, salt);
+    const newApiKey = await create_unique_api_key();
+    await APIKey.create({
+      api_key: newApiKey,
+      is_active: true,
+      total_request: 0,
+      violation: 0,
+      violation_limit: 100,
+    }).save();
   }
 }

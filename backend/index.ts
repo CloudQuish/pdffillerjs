@@ -28,23 +28,23 @@ const startWorker = async () => {
   }
 };
 
-if (cluster.isMaster) {
-  console.log(`Master ${process.pid} is running`);
+// if (cluster.isMaster) {
+//   console.log(`Master ${process.pid} is running`);
 
-  // Fork workers.
-  for (let i = 0; i < numCPUs; i++) {
-    cluster.fork();
-  }
+//   // Fork workers.
+//   for (let i = 0; i < numCPUs; i++) {
+//     cluster.fork();
+//   }
 
-  cluster.on("exit", (worker, code, signal) => {
-    console.log(`Worker ${worker.process.pid} died`);
-    // Optionally, you can restart the worker here
-    cluster.fork();
-  });
-} else {
+//   cluster.on("exit", (worker, code, signal) => {
+//     console.log(`Worker ${worker.process.pid} died`);
+//     // Optionally, you can restart the worker here
+//     cluster.fork();
+//   });
+// } else {
   // Workers can share any TCP connection
   // In this case, it is an HTTP server
   startWorker().then(() => {
     console.log(`Worker ${process.pid} started`);
   });
-}
+// }

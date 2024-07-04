@@ -1,8 +1,8 @@
-import FileEntity from "./file.entity";
+import APIKey from "./api.entity";
 import UserEntity from "./user.entity";
 export default {
-  FileEntity,
   UserEntity,
+  APIKey,
 };
 
-export { FileEntity, UserEntity };
+export { UserEntity, APIKey };
