@@ -1,18 +1,14 @@
 import { Request, Response } from "express";
 import { errorHandler, sendError, sendSuccess } from "@utils";
-import * as Yup from "yup";
 import User from "src/entity/user.entity";
+import { userSchema } from "src/validations/user.validationt";
 
 class UserController {
   async create_api_key(req: Request, res: Response) {
     const { first_name, last_name, email } = req.body;
-    const schema = await Yup.object().shape({
-      first_name: Yup.string().required(),
-      last_name: Yup.string().required(),
-      email: Yup.string().email().required(),
-    });
+
     try {
-      await schema.validate(req.body, { abortEarly: false });
+      await userSchema.parse(req.body);
       const user = await User.findOne({
         where: {
           email,
