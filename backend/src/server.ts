@@ -53,7 +53,7 @@ export class App {
   private setupSwagger() {
     const swaggerDocument = require("../swagger.json");
     const options = {
-      customSiteTitle: "PDF Filler API",
+      customSiteTitle: "PDF Filler API Documentation",
     };
     this.express.use(
       "/api-docs",
