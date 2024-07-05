@@ -1,15 +1,7 @@
-import {
-  Entity,
-  PrimaryGeneratedColumn,
-  Column,
-  BeforeInsert
-} from "typeorm";
-
+import { Entity, PrimaryGeneratedColumn, Column } from "typeorm";
 
 import { IUser } from "../interfaces";
 import { CustomBaseEntity } from "./base.entity";
-import APIKey from "./api.entity";
-import { create_unique_api_key } from "src/utils/apikey";
 
 @Entity({
   name: "user",
@@ -29,18 +21,4 @@ export default class User extends CustomBaseEntity implements IUser {
 
   @Column({ type: "text" })
   email!: string;
-
- 
-
-  @BeforeInsert()
-  async beforeInsert() {
-    const newApiKey = await create_unique_api_key();
-    await APIKey.create({
-      api_key: newApiKey,
-      is_active: true,
-      total_request: 0,
-      violation: 0,
-      violation_limit: 100,
-    }).save();
-  }
 }

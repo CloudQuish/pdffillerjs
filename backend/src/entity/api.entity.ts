@@ -9,7 +9,7 @@ import { IAPIKey } from "../interfaces";
 import { CustomBaseEntity } from "./base.entity";
 
 @Entity({
-  name: "user",
+  name: "api_key",
   orderBy: {
     created_at: "ASC",
   },
@@ -21,7 +21,7 @@ export default class APIKey extends CustomBaseEntity implements IAPIKey {
   @Column({ type: "varchar", length: 255 })
   api_key!: string;
 
-  @Column({ type: "int", unique: true })
+  @Column({ type: "int", unique: false })
   user_id!: number;
 
   @Column({ type: "boolean" })

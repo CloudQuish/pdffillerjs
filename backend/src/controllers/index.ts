@@ -1,2 +1,3 @@
 import PDFController from "./pdffiller.controller";
-export { PDFController };
+import APIKeyConotroller from "./apikey.controller";
+export { PDFController, APIKeyConotroller };
