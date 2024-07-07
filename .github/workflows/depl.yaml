@@ -1,0 +1,33 @@
+name: PDF Filler CI/CD
+
+on:
+  push:
+    branches: [main]
+jobs:
+  deploy_to_droplet:
+    runs-on: self-hosted
+
+    env:
+      DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+        with:
+          ref: main
+
+      - name: Use Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 20.11.1
+      - name: Delete existing .env.prod file if exists
+        run: rm -f backend/.env.prod
+
+      - name: Copy /var/www/backend.prod.env to backend/.env.prod
+        run: cp /var/www/backend.prod.env backend/.env.prod
+
+      - name: Shutdown existing containers gracefully
+        run: echo $DOCKER_PASSWORD | sudo -S docker-compose down
+
+      - name: Run Docker Compose
+        run: echo $DOCKER_PASSWORD | sudo -S docker-compose up --build -d

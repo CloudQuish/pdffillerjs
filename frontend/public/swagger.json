@@ -1,0 +1,338 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Revesh PDF Filler API Documentation | v1",
+    "version": "1.0.0",
+    "description": "API for filling and retrieving information from PDF files"
+  },
+  "servers": [
+    {
+      "url": "https://v3.revesh.com/api/pdf",
+      "description": "Hosted Server | Revesh PDF Filler API"
+    },
+    {
+      "url": "http://localhost:8000/api/pdf",
+      "description": "Local Server | Revesh PDF Filler API"
+    }
+  ],
+  "components": {
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    }
+  },
+  "security": [
+    {
+      "bearerAuth": []
+    }
+  ],
+  "paths": {
+    "/fill-by-url": {
+      "post": {
+        "summary": "Fill a PDF from a provided URL with given data",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "file_url": {
+                    "type": "string",
+                    "format": "url"
+                  },
+                  "filling_values": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "accessor": {
+                          "type": "string",
+                          "description": "It is the field name that you want to fill in the pdf file"
+                        },
+                        "value": {
+                          "type": "string",
+                          "description": "It is the value of the field that you want to fill in the pdf file"
+                        },
+                        "type": {
+                          "type": "string",
+                          "enum": [
+                            "text",
+                            "dropdown",
+                            "checkbox",
+                            "radio",
+                            "image"
+                          ],
+                          "description": "It is the type of the field that you want to fill in the pdf file"
+                        },
+                        "coordinates": {
+                          "type": "object",
+                          "properties": {
+                            "x": {
+                              "type": "number",
+                              "description": "It is the x coordinate of the field that you want to fill in the pdf file"
+                            },
+                            "y": {
+                              "type": "number",
+                              "description": "It is the y coordinate of the field that you want to fill in the pdf file"
+                            },
+                            "width": {
+                              "type": "number",
+                              "description": "It is the width of the field that you want to fill in the pdf file"
+                            },
+                            "height": {
+                              "type": "number",
+                              "description": "It is the height of the field that you want to fill in the pdf file"
+                            },
+                            "page_index": {
+                              "type": "number",
+                              "description": "It is the page index of the field that you want to fill in the pdf file"
+                            }
+                          },
+                          "required": [
+                            "x",
+                            "y",
+                            "width",
+                            "height",
+                            "page_index"
+                          ],
+                          "description": "Optional coordinates for the field"
+                        }
+                      },
+                      "required": ["accessor", "value", "type"]
+                    }
+                  }
+                },
+                "required": ["file_url", "filling_values"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "object"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/fill-pdf-by-name": {
+      "post": {
+        "summary": "Fill a PDF by its name",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "pdf_name": {
+                    "type": "string"
+                  },
+                  "filling_values": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "accessor": {
+                          "type": "string"
+                        },
+                        "value": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "PDF filled successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "object"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/get-fillable-fields-by-url": {
+      "post": {
+        "summary": "Get fillable fields from a PDF using a URL",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "file_url": {
+                    "type": "string",
+                    "format": "url"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Fillable fields retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "object"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/get-fillable-fields-by-buffer": {
+      "post": {
+        "summary": "Get fillable fields from a PDF using a buffer",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "pdf_buffer": {
+                    "type": "string",
+                    "format": "base64"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Fillable fields retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "object"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,15 @@
+.idea/
+.vscode/
+node_modules/
+build/
+tmp/
+temp/
+env/
+.env
+.env.prod
+prod.env
+./src/bootstrap/certificate.crt
+certificate.crt
+uploads/
+
+
