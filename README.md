@@ -32,7 +32,7 @@ Welcome to the PDF Filler API! This API allows you to fill PDF files with specif
 2. Navigate to the project directory:
 
    ```bash
-   cd pdffillerjs
+   cd pdffillerjs && cd backend
    ```
 
 3. Install the dependencies:
